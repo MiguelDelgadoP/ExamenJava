@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="layout/layout :: head">
+<meta charset="utf-8">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="py-4 ml-5 mr-5">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a th:href="@{/form}" class="btn btn-primary">Agregar empleado</a>
+
+					<a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPDF}"
+						class="btn btn-secondary">Exportar a PDF</a> <a
+						sec:authorize="hasRole('ADMIN')" th:href="@{/exportarExcel}"
+						class="btn btn-success">Exportar a Excel</a>
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Nombre</th>
+							<th>Apellido Paterno</th>
+							<th>Apellido Materno</th>
+							<th>Email</th>
+							<th>Fecha Alta</th>
+							<th>Fecha Baja</th>
+							<th>Fecha Modificacion</th>
+							<th>Fecha Revocado</th>
+							<th>Fecha Vigencia</th>
+							<th>Estatus</th>
+							<th>Numero de Acceso</th>
+							<th>Area</th>
+							<th>Detalles</th>
+							<th sec:authorize="hasRole('ADMIN')">Editar</th>
+							<th sec:authorize="hasRole('ADMIN')">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="usuario : ${usuarios}">
+							<td><a class="btn btn-primary btn-xs" th:href="@{/ver/} + ${usuario.id}"th:text="${usuario.id}"></a></td>
+							<td th:text="${usuario.nombre}"></td>
+							<td th:text="${usuario.apaterno}"></td>
+							<td th:text="${usuario.amaterno}"></td>
+							<td th:text="${usuario.email}"></td>
+							<td th:text="${usuario.fecha_alta}"></td>
+							<td th:text="${usuario.fecha_baja}"></td>
+							<td th:text="${usuario.fecha_modificacion}"></td>
+							<td th:text="${usuario.fecha_vigencia}"></td>
+							<td th:text="${usuario.fecha_revocado}"></td>
+							<td th:text="${usuario.estatus}"></td>
+							<td th:text="${usuario.noacceso}"></td>
+							<td th:text="${usuario.area}"></td>
+							<td><a class="btn btn-info btn-sm"
+								th:href="@{/ver/} + ${usuario.id}">Detalles</a></td>
+							<td sec:authorize="hasRole('ADMIN')"><a
+								class="btn btn-warning btn-sm"
+								th:href="@{/form/} + ${usuario.id}">Editar</a></td>
+							<td sec:authorize="hasRole('ADMIN')"><a
+								class="btn btn-danger btn-sm"
+								th:href="@{/eliminar/} + ${usuario.id}"
+								onclick="confirm('¿Estás seguro de eliminar al empleado?');">Eliminar</a></td>
+						</tr>
+					</tbody>
+				</table>
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

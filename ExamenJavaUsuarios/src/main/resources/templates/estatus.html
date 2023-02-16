@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="layout/layout :: head">
+<meta charset="utf-8">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<br>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">Control de Usuarios</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" href="#">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+
+
+				</ul>
+
+			</div>
+		</div>
+	</nav>
+	
+	
+				  <a data-toggle="dropdown" class="user dropdown-toggle" href="#" aria-expanded="true">
+ <img th:src="@{/images/activo.jpg}" id="imagen" class="img-circle"/>
+    <b class="caret"></b>
+         </a>
+			  <a data-toggle="dropdown" class="user dropdown-toggle" href="#" aria-expanded="true">
+ <img th:src="@{/images/inactivo.jpg}" id="imagen" class="img-circle"/>
+    <b class="caret"></b>
+         </a>
+         		  <a data-toggle="dropdown" class="user dropdown-toggle" href="#" aria-expanded="true">
+ <img th:src="@{/images/revocado.jpg}" id="imagen" class="img-circle"/>
+    <b class="caret"></b>
+         </a>
+	
+	
+	
+	
+
+	<div class="container">
+		<div class="row">
+			<div
+				class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center" th:text="${titulo}"></h1>
+				<div class="card-body">
+					<form class="form-inline" th:action="@{/form}"
+						th:object="${usuario}" method="post">
+						<input type="hidden" th:field="*{id}" th:value="${usuario.id}" />
+						<div class="form-group mb-2">
+							<label>NOMBRE: </label> <input type="text" th:field="*{nombre}"
+								class="form-control" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+						</div>
+
+						<div class="form-group mx-sm-3 mb-2">
+							<label>FECHA ALTA INICIAL: </label> <input type="date"
+								th:field="*{fecha_alta}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('fecha_alta')}"
+								th:errors="*{fecha_alta}"></small>
+						</div>
+						<
+						<div class="form-group">
+							<label>FECHA ALTA FINAL: </label> <input type="date"
+								th:field="*{fecha_baja}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('fecha_baja')}"
+								th:errors="*{fecha_baja}"></small>
+						</div>
+						<input type="submit" class="btn bn-info mb-2" values="buscar">
+						&nbsp;&nbsp; <input type="submit" class="btn bn-secondary mb-2"
+							values="limpiar">
+					</form>
+
+					<table class="table table-striped">
+						<thead>
+							<tr>
+
+								<th>NOMBRE</th>
+								<th>APELLIDO PATERNO</th>
+								<th>APELLIDO MATERNO</th>
+								<th>LOGIN</th>
+								<th>FECHA ALTA</th>
+								<th>ESTATUS</th>
+								<th>ACCION</th>
+								<th sec:authorize="hasRole('ADMIN')">Editar</th>
+								<th sec:authorize="hasRole('ADMIN')">Eliminar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="usuario : ${usuarios}">
+								<td><a class="btn btn-primary btn-xs"
+									th:href="@{/ver/} + ${usuario.id}" th:text="${usuario.id}"></a></td>
+								<td th:text="${usuario.nombre}"></td>
+								<td th:text="${usuario.apaterno}"></td>
+								<td th:text="${usuario.amaterno}"></td>
+								<td th:text="${usuario.login}"></td>
+								<td th:text="${usuario.estatus}"></td>
+
+								<td><a class="btn btn-info btn-sm"
+									th:href="@{/ver/} + ${usuario.id}">ACCION</a></td>
+								<td sec:authorize="hasRole('ADMIN')"><a
+									class="btn btn-warning btn-sm"
+									th:href="@{/form/} + ${usuario.id}">Editar</a></td>
+								<td sec:authorize="hasRole('ADMIN')"><a
+									class="btn btn-danger btn-sm"
+									th:href="@{/eliminar/} + ${usuario.id}"
+									onclick="confirm('¿Estás seguro de eliminar al usuario?');">Baja</a></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="box-footer"></div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+
+				<th>NOMBRE</th>
+				<th>LOGIN</th>
+				<th>FECHA ALTA</th>
+				<th>ESTATUS</th>
+				<th>ACCION</th>
+				<th sec:authorize="hasRole('ADMIN')">Editar</th>
+				<th sec:authorize="hasRole('ADMIN')">Baja</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="usuario : ${empleados}">
+				<td><a class="btn btn-primary btn-xs"
+					th:href="@{/ver/} + ${empleado.id}" th:text="${empleado.id}"></a></td>
+				<td th:text="${empleado.nombre}"></td>
+				<td th:text="${empleado.apellido}"></td>
+				<td th:text="${empleado.email}"></td>
+				<td th:text="${empleado.fecha}"></td>
+				<td th:text="${empleado.telefono}"></td>
+				<td th:text="${empleado.sexo}"></td>
+				<td th:text="${empleado.salario}"></td>
+				<td><a class="btn btn-info btn-sm"
+					th:href="@{/ver/} + ${empleado.id}">Detalles</a></td>
+				<td sec:authorize="hasRole('ADMIN')"><a
+					class="btn btn-warning btn-sm" th:href="@{/form/} + ${empleado.id}">Editar</a></td>
+				<td sec:authorize="hasRole('ADMIN')"><a
+					class="btn btn-danger btn-sm"
+					th:href="@{/eliminar/} + ${empleado.id}"
+					onclick="confirm('¿Estás seguro de eliminar al empleado?');">Eliminar</a></td>
+			</tr>
+		</tbody>
+	</table>
+	<nav th:replace="paginator-nav :: paginator"></nav>
+	</div>
+	</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
